@@ -1,22 +1,14 @@
 import streamlit as st
 import pandas as pd
 import requests
-from io import BytesIO
-import folium
-from streamlit_folium import st_folium
 from arcgis.gis import GIS
 from arcgis.gis import User
 from arcgis.features import FeatureLayerCollection, FeatureLayer
-from arcgis.geometry import project 
-import leafmap.foliumap as leafmap
 import geopandas as gpd
 from shapely import Geometry, Polygon, MultiPolygon
-import pydeck as pdk
 from shapely.ops import unary_union
 import math
-
 from arcgis.features import Feature, FeatureSet, FeatureCollection
-from arcgis.geometry import Point
 from arcgis.features.analyze_patterns import interpolate_points
 import os
 import time
