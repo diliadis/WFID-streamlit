@@ -273,12 +273,17 @@ def get_genus_distribution_layers_from_folder(user):
     return feature_layer_per_genus_dict
 
 @st.cache_data
-def get_genus_distribution_layer(genus_name, user, return_only_url=False):
-    feature_layer_per_genus_dict = get_genus_distribution_layers_from_folder(user)
-    if return_only_url:
-        return feature_layer_per_genus_dict[genus_name]
-
-    genus_feature_layer = FeatureLayer(feature_layer_per_genus_dict[genus_name]).query(where='1=1', out_fields='', return_geometry=True)
+def get_genus_distribution_layer(genus_name, _gis, return_only_url=False):
+    # feature_layer_per_genus_dict = get_genus_distribution_layers_from_folder(user)
+    # if return_only_url:
+    #     return feature_layer_per_genus_dict[genus_name]
+    # genus_feature_layer = FeatureLayer(feature_layer_per_genus_dict[genus_name]).query(where='1=1', out_fields='', return_geometry=True)
+    
+    url = [c for c in _gis.content.search(query="title:" + genus_name+"_clipped",
+                   item_type="Feature Layer",
+                                max_items=10) if c.title == genus_name+"_clipped"][0].url+'/0'
+    
+    genus_feature_layer = FeatureLayer(url).query(where='1=1', out_fields='', return_geometry=True)
     polygons = []
     for poly in genus_feature_layer.features:
         for ring in poly.geometry['rings']:
@@ -421,7 +426,7 @@ def main():
                         st.write(len(reference_data))
                         st.session_state['top_map_data'] = reference_data
                         
-                        st.session_state['genus_distribution_layers']  = get_genus_distribution_layer(genus_name, user, return_only_url=True)
+                        st.session_state['genus_distribution_layers']  = get_genus_distribution_layer(genus_name, gis, return_only_url=True)
 
                     with top_map_container.container():
                         markerSymbol = {
